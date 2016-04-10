@@ -11,8 +11,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import miw.exceptions.NamePlayerException;
-import miw.exceptions.NumPlayerException;
+import miw.exceptions.FullPlayersException;
+import miw.exceptions.InvalidNamePlayerException;
+import miw.exceptions.InvalidNumberPlayersException;
 
 /**
  * @author bm0846
@@ -53,59 +54,68 @@ public class PartidaTest {
 	 * jugadores por el limite
 	 */
 	@Test
-	public void testNumPlayers6() throws NumPlayerException {
-		try {
-			Partida game = new Partida(6);
-			assertEquals(game.getNumPlayers(), 6);
-		} catch (Exception e) {
-
-		}
+	public void testNumPlayers6() throws InvalidNumberPlayersException {
+		Partida game = new Partida(6);
+		assertEquals(game.getPlayersNumber(), 6);
 	}
 
-	@Test(expected = NumPlayerException.class)
-	public void testNumPlayers0() throws NumPlayerException {
+	@Test(expected = InvalidNumberPlayersException.class)
+	public void testNumPlayers0() throws InvalidNumberPlayersException {
 		Partida game;
 		game = new Partida(0);
 		assertNull(game);
 	}
 
-	@Test(expected = NumPlayerException.class)
-	public void testNumPlayers7() throws NumPlayerException {
+	@Test(expected = InvalidNumberPlayersException.class)
+	public void testNumPlayers7() throws InvalidNumberPlayersException {
 		Partida game;
 		game = new Partida(7);
 		assertNull(game);
 
 	}
 
-	@Test(expected = NamePlayerException.class)
-	public void testNombreBlanco() throws NumPlayerException, NamePlayerException {
+	@Test(expected = InvalidNamePlayerException.class)
+	public void testNombreBlanco()
+			throws InvalidNumberPlayersException, FullPlayersException, InvalidNamePlayerException {
 		Partida game = new Partida(1);
-		game.add("");
+		game.addPlayer("");
 
 	}
 
-	@Test(expected = NamePlayerException.class)
-	public void testNombreEspaciosBlanco() throws NumPlayerException, NamePlayerException {
+	@Test(expected = InvalidNamePlayerException.class)
+	public void testNombreEspaciosBlanco()
+			throws InvalidNumberPlayersException, FullPlayersException, InvalidNamePlayerException {
 		Partida game = new Partida(1);
-		game.add("     ");
+		game.addPlayer("     ");
 
 	}
 
-	@Test(expected = Exception.class)
-	public void testNombreRepedido() throws NumPlayerException, NamePlayerException {
+	@Test(expected = InvalidNamePlayerException.class)
+	public void testRepeadNamePlayer()
+			throws InvalidNumberPlayersException, FullPlayersException, InvalidNamePlayerException {
 		Partida game = new Partida(2);
-		game.add("Ligia");
-		game.add("Ligia");
+		game.addPlayer("Player 1");
+		game.addPlayer("Player 1");
 	}
-	
+
+	@Test(expected = FullPlayersException.class)
+	public void testFullPlayers()
+			throws InvalidNumberPlayersException, FullPlayersException, InvalidNamePlayerException {
+		Partida game = new Partida(1);
+		game.addPlayer("Player 1");
+		game.addPlayer("Player 1");
+	}
+
 	@Test
-	public void testAddPlayer()  {
-		try{
-			Partida game = new Partida(1);
-			game.add("Ligia");
-			assertEquals(game.getPlayers().size(),1);
-		}catch(Exception e){
-			
+	public void testAddPlayer() {
+		try {
+			Partida game = new Partida(2);
+			game.addPlayer("Player 1");
+			game.addPlayer("Player 2");
+			assertEquals(game.getPlayers().size(), 2);
+			System.out.println(game);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
